@@ -1,6 +1,3 @@
-Absolutely! I’ll create a professional `README.md` for your **Decentralized Vault project**, summarizing all the work you’ve done so far, including backend, frontend, smart contract deployment, and testing. Here’s a full draft you can use in your GitHub repository:
-
----
 
 ```markdown
 # Decentralized Vault 🗄️
@@ -184,7 +181,3 @@ await totalFiles();
 
 ---
 
-If you want, I can also **create a concise project description** that you can add in the **GitHub repository description section** along with **tags/topics** so your project looks professional on GitHub.  
-
-Do you want me to do that as well?
-```
