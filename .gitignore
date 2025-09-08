@@ -10,6 +10,12 @@ frontend/.env
 # Build artifacts
 backend/build/
 frontend/build/
+frontend/dist/
+frontend/.next/
 
 # Logs
 *.log
+
+# OS files
+.DS_Store
+Thumbs.db
