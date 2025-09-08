@@ -3,26 +3,27 @@ require("dotenv").config();
 const fs = require("fs");
 const path = require("path");
 
-// Validate environment variables
+// ------------------- Load ENV -------------------
 const { PRIVATE_KEY, RPC_URL, CONTRACT_ADDRESS } = process.env;
 if (!PRIVATE_KEY || !RPC_URL || !CONTRACT_ADDRESS) {
     throw new Error("Please set PRIVATE_KEY, RPC_URL, and CONTRACT_ADDRESS in .env");
 }
 
-// Load ABI
-const abiPath = path.join(__dirname, "IPFSStorage.json");
-if (!fs.existsSync(abiPath)) throw new Error("ABI file IPFSStorage.json not found!");
+// ------------------- Load ABI -------------------
+const abiPath = path.join(__dirname, "build", "contracts", "IPFSStorage.json"); // updated path
+if (!fs.existsSync(abiPath)) throw new Error("ABI file not found at build/contracts/IPFSStorage.json");
+
 const { abi } = JSON.parse(fs.readFileSync(abiPath, "utf8"));
 
-// Provider and wallet
+// ------------------- Provider & Wallet -------------------
 const provider = new ethers.JsonRpcProvider(RPC_URL);
 const wallet = new ethers.Wallet(PRIVATE_KEY, provider);
 
-// Contract instance
+// ------------------- Contract Instance -------------------
 const contract = new ethers.Contract(CONTRACT_ADDRESS, abi, wallet);
 
 console.log("✅ Connected to contract at:", CONTRACT_ADDRESS);
-console.log("Using account:", wallet.address);
+console.log("👤 Using account:", wallet.address);
 
 // ------------------- Helper Functions -------------------
 
@@ -31,7 +32,7 @@ async function getTotalFiles() {
     try {
         const total = await contract.totalFiles();
         console.log("📊 Total files:", total.toString());
-        return total.toNumber();
+        return Number(total); // ethers v6 returns BigInt
     } catch (err) {
         console.error("❌ Error getting total files:", err.message);
         return 0;
@@ -45,7 +46,7 @@ async function uploadFile(cid) {
 
         const tx = await contract.uploadFile(cid, {
             gasLimit: 500_000,
-            maxPriorityFeePerGas: feeData.maxPriorityFeePerGas,
+            maxPriorityFeePerGas: feeData.maxPriorityFeePerGas ?? ethers.parseUnits("1", "gwei"), // fallback
         });
 
         await tx.wait();
@@ -59,7 +60,12 @@ async function uploadFile(cid) {
 async function getFile(id) {
     try {
         const [cid, owner, timestamp] = await contract.getFile(id);
-        console.log("📄 File details:", { id, cid, owner, timestamp: timestamp.toString() });
+        console.log("📄 File details:", {
+            id,
+            cid,
+            owner,
+            timestamp: timestamp.toString(),
+        });
     } catch (err) {
         console.error(`❌ Error getting file ${id}:`, err.message);
     }
@@ -72,7 +78,7 @@ async function deleteFile(id) {
 
         const tx = await contract.deleteFile(id, {
             gasLimit: 500_000,
-            maxPriorityFeePerGas: feeData.maxPriorityFeePerGas,
+            maxPriorityFeePerGas: feeData.maxPriorityFeePerGas ?? ethers.parseUnits("1", "gwei"),
         });
 
         await tx.wait();
@@ -83,7 +89,6 @@ async function deleteFile(id) {
 }
 
 // ------------------- Main Example Usage -------------------
-
 (async () => {
     // Get total files
     const total = await getTotalFiles();
