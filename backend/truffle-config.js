@@ -5,23 +5,25 @@ const { PRIVATE_KEY, RPC_URL } = process.env;
 
 module.exports = {
   networks: {
-    // Local Ganache network using HDWalletProvider
+    // Local Ganache network
     development: {
-      provider: () => new HDWalletProvider({
-        privateKeys: [PRIVATE_KEY],
-        providerOrUrl: RPC_URL,  // should point to Ganache RPC (http://127.0.0.1:8545)
-      }),
+      provider: () =>
+        new HDWalletProvider({
+          privateKeys: [PRIVATE_KEY],
+          providerOrUrl: RPC_URL, // http://127.0.0.1:8545
+        }),
       network_id: "*",
-      gas: 8000000,          // increase if contract is large
+      gas: 8000000,
       gasPrice: 20000000000, // 20 Gwei
     },
 
     // Polygon Amoy Testnet
     amoy: {
-      provider: () => new HDWalletProvider({
-        privateKeys: [PRIVATE_KEY],
-        providerOrUrl: RPC_URL,
-      }),
+      provider: () =>
+        new HDWalletProvider({
+          privateKeys: [PRIVATE_KEY],
+          providerOrUrl: RPC_URL,
+        }),
       network_id: "*",
       gas: 6000000,
       gasPrice: 10000000000, // 10 Gwei
@@ -31,7 +33,6 @@ module.exports = {
     },
   },
 
-  // Mocha options
   mocha: {
     timeout: 200000,
   },
@@ -39,17 +40,17 @@ module.exports = {
   // Solidity compiler
   compilers: {
     solc: {
-      version: "0.8.21", // Ensure this matches your contracts
+      version: "0.8.19", // use 0.8.19 to avoid PUSH0
       settings: {
         optimizer: {
           enabled: true,
           runs: 200,
         },
+        evmVersion: "london", // CHANGED from shanghai -> london
       },
     },
   },
 
-  // Truffle DB (disabled)
   db: {
     enabled: false,
   },
