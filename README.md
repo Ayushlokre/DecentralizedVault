@@ -1,109 +1,112 @@
+---
 
-```markdown
-# Decentralized Vault 🗄️
+# Decentralized Data Vault
 
-A **Decentralized File Storage System** built on blockchain and IPFS, allowing users to securely upload, retrieve, and manage files without relying on centralized servers. This project combines **Ethereum smart contracts, Web3, IPFS, and Node.js/React** to create a full-stack decentralized application.
+## Overview
+
+The **Decentralized Data Vault** is a blockchain-powered application designed to provide secure, transparent, and user-controlled data storage. Unlike traditional cloud storage platforms that rely on centralized servers, this system uses **IPFS (InterPlanetary File System)** for distributed file storage and **Ethereum smart contracts** for access control and verification.
+
+Users can upload, store, and share files while maintaining complete ownership and control over their data. Access permissions are enforced through blockchain transactions, ensuring immutability, privacy, and resistance to unauthorized access or tampering.
+
+This project demonstrates how **Web3 technologies** can be combined to create a decentralized alternative to centralized cloud storage solutions.
 
 ---
 
-## 🚀 Project Overview
+## Features
 
-**Decentralized Vault** is a secure and transparent file storage system where:
-
-- Users can upload files to IPFS.
-- The file CID is stored on a blockchain smart contract.
-- Users can retrieve files or view metadata (owner, timestamp, total files).
-- Provides complete decentralization, making data tamper-proof.
-
----
-
-## 🏗️ Tech Stack
-
-- **Frontend:** React.js
-- **Backend:** Node.js, Express
-- **Blockchain:** Ethereum / Polygon (Amoly Testnet)
-- **Smart Contracts:** Solidity
-- **Storage:** IPFS
-- **Web3 Interaction:** Web3.js
-- **Development Tools:** Truffle, Ganache
+* **Blockchain-Backed Security**: Ethereum smart contracts handle file ownership, access permissions, and transaction logs.
+* **Decentralized Storage**: Files are stored on IPFS, ensuring fault tolerance and resistance to single-point failures.
+* **Wallet-Based Authentication**: Users authenticate and interact with the platform via MetaMask.
+* **Access Control**: File owners can grant or revoke access using blockchain transactions.
+* **User-Friendly Frontend**: Built with React for a clean and modern user interface.
+* **Backend API**: Powered by Node.js and Express for communication between blockchain, IPFS, and the frontend.
 
 ---
 
-## ⚙️ Features
+## Tech Stack
 
-- Upload single or multiple files to IPFS.
-- Retrieve file details by ID.
-- View total number of uploaded files.
-- Smart contract deployed on **Amoly Testnet**.
-- Node.js backend handles interaction with blockchain.
-- Frontend provides a user-friendly interface for file management.
+* **Frontend**: React, JavaScript, HTML, CSS
+* **Backend**: Node.js, Express.js
+* **Blockchain**: Ethereum, Solidity (Smart Contracts)
+* **Storage**: IPFS (InterPlanetary File System)
+* **Authentication**: MetaMask wallet integration
+* **Development Tools**: Truffle, Ganache, Web3.js, IPFS
 
 ---
 
-## 🗂️ Project Structure
+## Project Architecture
 
+1. **Frontend (React)**: Provides user interaction for file upload, retrieval, and access control.
+2. **Backend (Node.js/Express)**: Handles IPFS integration and communication with blockchain.
+3. **Smart Contracts (Solidity)**: Deployed on Ethereum using Truffle for ownership and permission management.
+4. **IPFS**: Stores files in a distributed manner and generates unique content hashes.
+5. **MetaMask**: Connects users’ wallets to the dApp for secure authentication and transaction signing.
+
+---
+
+## Setup Instructions
+
+### Prerequisites
+
+Make sure you have the following installed:
+
+* [Node.js](https://nodejs.org/)
+* [npm](https://www.npmjs.com/)
+* [MetaMask](https://metamask.io/) extension in your browser
+* [Truffle](https://trufflesuite.com/)
+* [Ganache](https://trufflesuite.com/ganache/) for local blockchain testing
+* [IPFS Desktop](https://docs.ipfs.tech/install/ipfs-desktop/) or IPFS daemon running locally
+
+### Clone Repository
+
+```bash
+git clone https://github.com/yourusername/DecentralizedDataVault.git
+cd DecentralizedDataVault
 ```
 
-DecentralizedVault/
-│
-├── backend/             # Node.js backend for smart contract interaction
-│   ├── contract.js      # Script to interact with deployed smart contract
-│   ├── checkBalance.js  # Script to check wallet balance on Amoly Testnet
-│   ├── IPFSStorage.json # ABI of the deployed smart contract
-│   ├── package.json
-│   ├── package-lock.json
-│   └── .env             # Environment variables (PRIVATE\_KEY, RPC\_URL, CONTRACT\_ADDRESS)
-│
-├── frontend/            # React frontend for user interface
-│   ├── public/
-│   ├── src/
-│   ├── package.json
-│   └── package-lock.json
-│
-├── contracts/           # Solidity smart contracts
-│   └── IPFSStorage.sol
-│
-├── migrations/          # Truffle migrations for contract deployment
-│
-└── truffle-config.js    # Truffle configuration file
-
-````
-
----
-
-## ⚡ Setup & Installation
-
-### 1. Clone the repository
-```bash
-git clone https://github.com/Ayushlokre/DecentralizedVault.git
-cd DecentralizedVault
-````
-
-### 2. Backend Setup
+### Backend Setup
 
 ```bash
 cd backend
 npm install
 ```
 
-* Create `.env` file:
+Create a `.env` file in the backend directory and add:
 
 ```env
-PRIVATE_KEY=<Your Wallet Private Key>
-RPC_URL=<Your Amoly Testnet RPC URL>
-CONTRACT_ADDRESS=<Deployed Contract Address>
+RPC_URL=your_rpc_provider_url
+PRIVATE_KEY=your_wallet_private_key
+CONTRACT_ADDRESS=your_deployed_contract_address
+IPFS_API_URL=http://localhost:5001
 ```
 
-* Test smart contract interaction:
+Run the backend server:
 
 ```bash
-node contract.js
-node checkBalance.js
+node server.js
 ```
 
----
+### Smart Contracts (Truffle)
 
-### 3. Frontend Setup
+Compile the smart contracts:
+
+```bash
+truffle compile
+```
+
+Deploy to local blockchain (Ganache):
+
+```bash
+truffle migrate --network development
+```
+
+Run Truffle console for testing:
+
+```bash
+truffle console
+```
+
+### Frontend Setup
 
 ```bash
 cd frontend
@@ -111,73 +114,29 @@ npm install
 npm start
 ```
 
-* Runs the React app on `http://localhost:3000`.
+---
+
+## Usage
+
+1. Connect your MetaMask wallet to the dApp.
+2. Upload files, which are stored on IPFS and recorded on the blockchain.
+3. Manage access permissions through the smart contract interface.
+4. Retrieve and download files securely using the generated IPFS hash.
 
 ---
 
-### 4. Smart Contract Deployment
+## Future Enhancements
 
-* **Truffle** was used to compile and deploy `IPFSStorage.sol`.
-* Deployment commands:
-
-```bash
-truffle compile
-truffle migrate --network amoly --reset
-```
-
-* Contract deployed at: `0x806C09492AF269eA9fC3497609E147441E601C9E` (Amoly Testnet).
+* Role-based access control for organizations.
+* File encryption before uploading to IPFS for additional security.
+* Multi-chain support (Polygon, Binance Smart Chain, etc.).
+* Advanced analytics for storage usage and access history.
 
 ---
 
-## 📝 Example Backend Scripts
+## License
 
-**Upload a file (CID)**:
-
-```js
-await uploadFile('QmExampleCID123456');
-```
-
-**Get file details**:
-
-```js
-await getFile(1);
-```
-
-**Get total files**:
-
-```js
-await totalFiles();
-```
-
----
-
-## 📌 Notes
-
-* Make sure your wallet has test tokens on **Amoly Testnet** to perform transactions.
-* Use valid CIDs for uploading files.
-* The frontend interacts with the backend API to handle file uploads and retrieval.
-
----
-
-## 🔗 Useful Links
-
-* [Amoly Testnet Explorer](https://amoly.polygonscan.com)
-* [IPFS Docs](https://docs.ipfs.io/)
-* [Truffle Docs](https://www.trufflesuite.com/docs)
-* [Web3.js Docs](https://web3js.readthedocs.io/)
-
----
-
-## 👨‍💻 Author
-
-**Ayush Lokre**
-
-* GitHub: [https://github.com/Ayushlokre](https://github.com/Ayushlokre)
-* Email: [ayushlokre007@gmail.com](mailto:ayushlokre007@gmail.com)
-
----
-
-```
+This project is licensed under the MIT License – see the [LICENSE](LICENSE) file for details.
 
 ---
 
