@@ -6,15 +6,20 @@ const { PRIVATE_KEY, RPC_URL } = process.env;
 module.exports = {
   networks: {
     // Local Ganache network
+    // development: {
+    //   provider: () =>
+    //     new HDWalletProvider({
+    //       privateKeys: [PRIVATE_KEY],
+    //       providerOrUrl: RPC_URL, // http://127.0.0.1:8545
+    //     }),
+    //   network_id: "*",
+    //   gas: 8000000,
+    //   gasPrice: 20000000000, // 20 Gwei
+    // },
     development: {
-      provider: () =>
-        new HDWalletProvider({
-          privateKeys: [PRIVATE_KEY],
-          providerOrUrl: RPC_URL, // http://127.0.0.1:8545
-        }),
-      network_id: "*",
-      gas: 8000000,
-      gasPrice: 20000000000, // 20 Gwei
+      host: "127.0.0.1",     // Localhost
+      port: 7545,            // Ganache default
+      network_id: "*",       // Any network
     },
 
     // Polygon Amoy Testnet

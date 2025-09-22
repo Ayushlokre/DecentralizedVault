@@ -29,15 +29,15 @@ console.log("👤 Using account:", wallet.address);
 
 // Get total files
 async function getTotalFiles() {
+    if (!contract.fileCount) return 0; // fallback if contract has no counter
     try {
-        const total = await contract.totalFiles();
-        console.log("📊 Total files:", total.toString());
-        return Number(total); // ethers v6 returns BigInt
-    } catch (err) {
-        console.error("❌ Error getting total files:", err.message);
+        const total = await contract.fileCount();
+        return Number(total);
+    } catch {
         return 0;
     }
 }
+
 
 // Upload a single file (CID)
 async function uploadFile(cid) {

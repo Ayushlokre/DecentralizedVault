@@ -4,55 +4,55 @@ import IPFSStorage from "./IPFSStorage.json";
 import './App.css';
 
 function App() {
-  const [hash, setHash] = useState("");
-  const [storedHash, setStoredHash] = useState("");
+  const [cid, setCid] = useState("");          // user input
+  const [retrievedCid, setRetrievedCid] = useState(""); // CID fetched
+  const [fileId, setFileId] = useState(0);     // which file ID to fetch
 
-  // Function to connect wallet
+  // Connect MetaMask
   const connectWallet = async () => {
-    if (window.ethereum) {
-      await window.ethereum.request({ method: "eth_requestAccounts" });
-      alert("Wallet connected!");
-    } else {
+    if (!window.ethereum) {
       alert("Please install MetaMask!");
+      return;
     }
+    await window.ethereum.request({ method: "eth_requestAccounts" });
+    alert("Wallet connected!");
   };
 
-  // Function to store hash
-  const storeHash = async () => {
+  // Upload file CID to the blockchain
+  const uploadFile = async () => {
     if (!window.ethereum) return alert("Please connect wallet");
 
     const provider = new ethers.BrowserProvider(window.ethereum);
     const signer = await provider.getSigner();
-
     const contractAddress = process.env.REACT_APP_CONTRACT_ADDRESS;
     const contract = new ethers.Contract(contractAddress, IPFSStorage.abi, signer);
 
     try {
-      const tx = await contract.storeHash(hash);
+      const tx = await contract.uploadFile(cid);
       await tx.wait();
-      alert("Hash stored successfully!");
+      alert("CID uploaded successfully!");
     } catch (err) {
       console.error(err);
-      alert("Error storing hash");
+      alert("Error uploading CID");
     }
   };
 
-  // Function to get stored hash
-  const getHash = async () => {
+  // Fetch a stored file by ID
+  const fetchFile = async () => {
     if (!window.ethereum) return alert("Please connect wallet");
 
     const provider = new ethers.BrowserProvider(window.ethereum);
     const signer = await provider.getSigner();
-
     const contractAddress = process.env.REACT_APP_CONTRACT_ADDRESS;
     const contract = new ethers.Contract(contractAddress, IPFSStorage.abi, signer);
 
     try {
-      const value = await contract.getHash();
-      setStoredHash(value);
+      const [storedCid, owner, timestamp] = await contract.getFile(fileId);
+      setRetrievedCid(storedCid);
+      console.log("Owner:", owner, "Timestamp:", timestamp.toString());
     } catch (err) {
       console.error(err);
-      alert("Error fetching hash");
+      alert("Error fetching file");
     }
   };
 
@@ -61,18 +61,31 @@ function App() {
       <header className="App-header">
         <h1>IPFS Storage DApp</h1>
         <button onClick={connectWallet}>Connect Wallet</button>
+
         <div style={{ marginTop: "20px" }}>
           <input
             type="text"
-            value={hash}
-            onChange={(e) => setHash(e.target.value)}
-            placeholder="Enter hash"
+            value={cid}
+            onChange={(e) => setCid(e.target.value)}
+            placeholder="Enter CID"
           />
-          <button onClick={storeHash}>Store Hash</button>
-          <button onClick={getHash}>Get Hash</button>
+          <button onClick={uploadFile}>Upload CID</button>
         </div>
-        {storedHash && (
-          <p style={{ marginTop: "20px" }}>Stored Hash: {storedHash}</p>
+
+        <div style={{ marginTop: "20px" }}>
+          <input
+            type="number"
+            value={fileId}
+            onChange={(e) => setFileId(e.target.value)}
+            placeholder="File ID"
+          />
+          <button onClick={fetchFile}>Fetch File</button>
+        </div>
+
+        {retrievedCid && (
+          <p style={{ marginTop: "20px" }}>
+            Retrieved CID: {retrievedCid}
+          </p>
         )}
       </header>
     </div>
